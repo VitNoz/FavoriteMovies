@@ -72,9 +72,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let newMovie = Movie(title: inputTitle, year: inputYear)
         titleLabel.text = ""
         yearLabel.text = ""
-        let found = moviesArray.filter{$0.title == newMovie.title && $0.year == newMovie.year}.count > 0
-        if !found { moviesArray.append(newMovie) }
-        self.tableView.reloadData()
+        let found = moviesArray.filter{$0.title == newMovie.title}.count > 0
+        if !found {
+            self.tableView.beginUpdates()
+            self.tableView.insertRows(at: [IndexPath(row: moviesArray.count, section: 0)], with: .automatic)
+            moviesArray.append(newMovie)
+            self.tableView.endUpdates()
+        }
+        
     }
     
     func setConstraints () {
