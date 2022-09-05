@@ -1,15 +1,15 @@
 //
 //  ViewController.swift
-//  FavoriteMovies
+//  FavoritesMovies
 //
-//  Created by Vitalik Nozhenko on 02.09.2022.
+//  Created by Vitalik Nozhenko on 04.09.2022.
 //
 
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    var moviesArray = [Movie]()
+    var movieArray = ["1", "2", "3"]
     
     let titleLabel: UITextField = {
         let textField = UITextField()
@@ -23,7 +23,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "Year"
-        textField.keyboardType = .decimalPad
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -33,7 +32,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         button.layer.cornerRadius = 10
         button.setTitle("Add", for: .normal)
         button.backgroundColor = .blue
-        button.addTarget(self, action: #selector(addButtonPress), for: .touchUpInside)
+        button.addTarget(ViewController.self, action: #selector(addButtonPress), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -52,31 +51,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         setConstraints()
         
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return moviesArray.count
-        }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        cell.textLabel?.text = moviesArray[indexPath.row].title + " " + "\(moviesArray[indexPath.row].year)"
-        return cell
-    }
-    
-    @objc func addButtonPress() {
-        
-        guard let inputTitle = titleLabel.text, !titleLabel.text!.isEmpty else { return }
-        guard let inputYear = Int(yearLabel.text ?? ""), !yearLabel.text!.isEmpty else {
-            yearLabel.text = ""
-            return }
-        let newMovie = Movie(title: inputTitle, year: inputYear)
-        titleLabel.text = ""
-        yearLabel.text = ""
-        let found = moviesArray.filter{$0.title == newMovie.title && $0.year == newMovie.year}.count > 0
-        if !found { moviesArray.append(newMovie) }
-        self.tableView.reloadData()
-    }
-    
+
     func setConstraints () {
         view.addSubview(titleLabel)
         NSLayoutConstraint.activate([
@@ -107,5 +82,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return movieArray.count
+        }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.textLabel?.text = movieArray[indexPath.row]
+        return cell
+    }
+    
+    @objc func addButtonPress() {
+        view.backgroundColor = .blue
+        movieArray.append("4")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
 }
-
