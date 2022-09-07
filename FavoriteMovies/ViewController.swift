@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import Collections
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    var moviesArray = [Movie]()
+    var moviesOrderedSet = OrderedSet<Movie>()
     
     let titleLabel: UITextField = {
         let textField = UITextField()
@@ -54,12 +55,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return moviesArray.count
+        return moviesOrderedSet.count
         }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        cell.textLabel?.text = moviesArray[indexPath.row].title + " " + "\(moviesArray[indexPath.row].year)"
+        cell.textLabel?.text = moviesOrderedSet[indexPath.row].title + " " + "\(moviesOrderedSet[indexPath.row].year)"
         return cell
     }
     
@@ -72,14 +73,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let newMovie = Movie(title: inputTitle, year: inputYear)
         titleLabel.text = ""
         yearLabel.text = ""
-        let found = moviesArray.filter{$0.title == newMovie.title}.count > 0
-        if !found {
+        if moviesOrderedSet.insert(newMovie, at: moviesOrderedSet.endIndex).inserted {
             self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [IndexPath(row: moviesArray.count, section: 0)], with: .automatic)
-            moviesArray.append(newMovie)
+            self.tableView.insertRows(at: [IndexPath(row: moviesOrderedSet.count-1, section: 0)], with: .automatic)
             self.tableView.endUpdates()
         }
-        
     }
     
     func setConstraints () {
